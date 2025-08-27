@@ -1,0 +1,14 @@
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"
+                  xmlns:ws="http://example.com/product/ws">
+  <soapenv:Header/>
+  <soapenv:Body>
+    <ws:SearchProductsRequest>
+      <ws:criteria>
+        <ws:query>java</ws:query>
+        <ws:minPrice>20</ws:minPrice>
+        <ws:maxPrice>60</ws:maxPrice>
+        <ws:category>BOOKS</ws:category>
+      </ws:criteria>
+    </ws:SearchProductsRequest>
+  </soapenv:Body>
+</soapenv:Envelope>
