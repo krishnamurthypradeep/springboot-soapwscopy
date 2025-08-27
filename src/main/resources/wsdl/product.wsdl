@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://schemas.xmlsoap.org/wsdl/"
+             xmlns:tns="http://example.com/product/ws"
+             xmlns:xs="http://www.w3.org/2001/XMLSchema"
+             xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+             targetNamespace="http://example.com/product/ws"
+             name="ProductService">
+
+    <types>
+        <xs:schema targetNamespace="http://example.com/product/ws" elementFormDefault="qualified">
+            <xs:simpleType name="Category">
+                <xs:restriction base="xs:string">
+                    <xs:enumeration value="ELECTRONICS"/>
+                    <xs:enumeration value="BOOKS"/>
+                    <xs:enumeration value="GROCERY"/>
+                </xs:restriction>
+            </xs:simpleType>
+
+            <xs:complexType name="SearchCriteria">
+                <xs:sequence>
+                    <xs:element name="query" type="xs:string" minOccurs="0"/>
+                    <xs:element name="minPrice" type="xs:decimal" minOccurs="0"/>
+                    <xs:element name="maxPrice" type="xs:decimal" minOccurs="0"/>
+                    <xs:element name="category" type="tns:Category" minOccurs="0"/>
+                </xs:sequence>
+            </xs:complexType>
+
+            <xs:complexType name="Product">
+                <xs:sequence>
+                    <xs:element name="id" type="xs:string"/>
+                    <xs:element name="name" type="xs:string"/>
+                    <xs:element name="price" type="xs:decimal"/>
+                    <xs:element name="category" type="tns:Category"/>
+                    <xs:element name="description" type="xs:string" minOccurs="0"/>
+                </xs:sequence>
+            </xs:complexType>
+
+            <xs:element name="SearchProductsRequest">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="criteria" type="tns:SearchCriteria"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+
+            <xs:element name="SearchProductsResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="products" type="tns:Product" minOccurs="0" maxOccurs="unbounded"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+        </xs:schema>
+    </types>
+
+    <message name="SearchProductsRequest">
+        <part name="parameters" element="tns:SearchProductsRequest"/>
+    </message>
+    <message name="SearchProductsResponse">
+        <part name="parameters" element="tns:SearchProductsResponse"/>
+    </message>
+
+    <portType name="ProductPortType">
+        <operation name="SearchProducts">
+            <input message="tns:SearchProductsRequest"/>
+            <output message="tns:SearchProductsResponse"/>
+        </operation>
+    </portType>
+
+    <binding name="ProductSoapBinding" type="tns:ProductPortType">
+        <soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document"/>
+        <operation name="SearchProducts">
+            <soap:operation soapAction="searchProducts"/>
+            <input>
+                <soap:body use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+        </operation>
+    </binding>
+
+    <service name="ProductService">
+        <port name="ProductPort" binding="tns:ProductSoapBinding">
+            <soap:address location="http://localhost:8080/services/product"/>
+        </port>
+    </service>
+</definitions>
